@@ -1,0 +1,111 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 900,
+  "height": 560,
+  "padding": 5,
+  "autosize": "fit-y",
+  "data": [
+    {
+      "name": "countries",
+      "url": "https://rawgit.com/vsapsai/ukraine_map_data/master/ukraine.json",
+      "format": {
+        "type": "topojson",
+        "feature": "countries"
+      },
+      "transform": [
+        {
+          "type": "geopath",
+          "projection": "projection"
+        }
+      ]
+    },
+    {
+      "name": "regions",
+      "url": "https://rawgit.com/vsapsai/ukraine_map_data/master/ukraine.json",
+      "format": {
+        "type": "topojson",
+        "feature": "regions"
+      },
+      "transform": [
+        {
+          "type": "geopath",
+          "projection": "projection"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "type": "mercator",
+      "scale": 2000,
+      "translate": [
+        30,
+        49
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "from": {
+        "data": "countries"
+      },
+      "encode": {
+        "enter": {
+          "fill": {
+            "value": "#dedede"
+          },
+          "stroke": {
+            "value": "white"
+          }
+        },
+        "update": {
+          "path": {
+            "field": "path"
+          }
+        }
+      }
+    },
+    {
+      "type": "path",
+      "from": {
+        "data": "regions"
+      },
+      "encode": {
+        "enter": {
+          "fill": {
+            "value": "#dedede"
+          },
+          "stroke": {
+            "value": "white"
+          }
+        },
+        "update": {
+          "path": {
+            "field": "path"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false
+    }
+  ],
+  "signals": [
+    {
+      "name": "hover",
+      "value": null,
+      "on": [
+        {"events": "path:mouseover", "update": "datum"},
+        {"events": "path:mouseout", "update": "null"}
+      ]
+    },
+    {
+      "name": "title",
+      "value": "U.S. Airports, 2008",
+      "update": "'U.S. Airports, 2008'"
+    }
+  ]
+}
