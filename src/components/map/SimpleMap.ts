@@ -1,89 +1,50 @@
-import * as React from 'react';
-import * as _ from 'lodash'
-import styled from 'styled-components'
-import { withFauxDOM } from 'react-faux-dom'
-import { select } from 'd3-selection'
-import {geoMercator, geoPath} from 'd3-geo'
-import { feature, mesh } from 'topojson-client'
-
-import data from './ukraine.json';
-import Tooltip from '../Tooltip'
-import withD3Renderer from '../withD3Renderer'
+import * as d3 from 'd3'
+import {feature, mesh} from 'topojson-client'
+import { map } from 'lodash'
 import './map.css'
 
-const LOADING = 'loading...'
+import dataA from '../../geo-data/ukraine.json'
+import mapContext, {GeoJsonData, ItemType} from '../../contexts/map-context'
+import {MapModel} from '../../models/map-model'
 
-const Wrapper = styled.div<{ hover?: boolean}>`
-  position: relative;
-  display: inline-block;
-  .tooltip {
-    visibility: ${({hover}) => (hover ? 'visible' : 'hidden')};
-    -webkit-transition: top .2s ease-out, left .2s ease-out;
-  }
-`
+export class SimpleMap {
+  constructor() {
 
-class Map extends React.PureComponent<any, any> {
-
-  constructor(props) {
-    super(props)
   }
 
-  x: any;
-  y: any;
+  onValueChange() {
 
-  computeTooltipProps = letter => {
-    const hoveredData = _.omit(_.find(this.props.data, {x: letter}), 'x')
-    const computeTop = this.state.look === 'stacked'
-      ? arr => this.y(_.sum(arr))
-      : arr => this.y(_.max(arr))
-    return {
-      style: {
-        top: computeTop(_.values(hoveredData)) + 5,
-        left: this.x(letter) + 40
-      },
-      content: `${letter}: ${_.values(hoveredData).join(', ')}`
+  }
+
+  render(root: any) {
+    const map = new MapModel(dataA)
+    const data = map.data
+    const handleClick = (type: ItemType, d: any) => {
+      mapContext.selectedObject = {
+        type,
+        item: d
+      }
     }
-  }
 
-  render() {
-    const {hover, chart} = this.props
-    return (
-      <Wrapper className="map">
-        {chart}
-        {chart !== LOADING &&
-        hover &&
-        hover.map((letter, index) => (
-          <Tooltip key={index} {...this.computeTooltipProps(letter)} />
-        ))}
-      </Wrapper>
-    )
-  }
+    d3.dragDisable(window)
 
-  renderD3() {
-    const {
-      connectFauxDOM,
-      // animateFauxDOM
-    } = this.props
-
-    const projection = geoMercator()
+    const projection = d3.geoMercator()
       .scale(2600)
       .translate([-960, 2830])
 
-    const path = geoPath(projection)
+    const path = d3.geoPath(projection)
 
     const countries = (feature(data, data.objects.countries) as any).features
     const lakes = (feature(data, data.objects.lakes) as any).features
     const rivers = (feature(data, data.objects.rivers) as any).features
     const regions = (feature(data, data.objects.regions) as any).features
 
-    const faux = connectFauxDOM('div', 'chart')
-
-    const svg = select(faux)
+    const svg = d3.select(root)
       .append('center')
       .append('svg')
       .attr('viewBox', '0 0 900 600')
-      .attr('width', 900)
-      .attr('height', 600)
+      .attr('width', '100%')
+      .attr('height', '100%')
 
     svg.selectAll(".country")
       .data(countries)
@@ -126,6 +87,10 @@ class Map extends React.PureComponent<any, any> {
       .enter()
       .append('path')
       .classed('region', true)
+      .on('click', function(d: any) {
+        handleClick(ItemType.PATH, d)
+        console.log(d)
+      })
       .attr('id', (d: any) => d.id)
       .attr('d', path)
 
@@ -138,10 +103,26 @@ class Map extends React.PureComponent<any, any> {
       .data(regions)
       .enter()
       .append('text')
+      .on('click', function(d: any) {
+        handleClick(ItemType.TEXT, d)
+        console.log(ItemType.TEXT)
+      })
+      .call(d3.drag()
+        .on('drag', function(d: any) {
+          d.x = d3.event.x;
+          d.y = d3.event.y
+          d3.select(this)
+            .attr('transform', "translate(" + d3.event.x + "," + d3.event.y + ")")
+        }))
+
+      .attr("text-anchor", 'middle')
       .attr('transform', (d: any) => `translate(${projection(d.properties.label_point)})`)
+      .attr('class', (d: any) => `region-label-${d.id}`)
       .classed('region-label', true)
+      .classed('draggable', true)
+      .classed('noselect', true)
       .selectAll('tspan')
-      .data((d: any) => d.properties.localized_name.ua.split(' '))
+      .data((d: any) => (d.properties.name || d.properties.localized_name.ua).split(' '))
       .enter()
       .append('tspan')
       .attr('x', 0)
@@ -149,7 +130,3 @@ class Map extends React.PureComponent<any, any> {
       .text((d: any) => `${d} `)
   }
 }
-
-export default withFauxDOM(
-  withD3Renderer({updateOn: ['data']})(Map)
-)

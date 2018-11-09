@@ -1,13 +1,18 @@
 {
-  "name": "chysla-client",
+  "name": "chysla",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.0.0",
+    "@material-ui/icons": "^3.0.0",
     "@types/d3": "^5.0.0",
     "@types/d3-geo": "^1.10.3",
+    "@types/lodash": "^4.14.116",
     "@types/react-faux-dom": "^4.1.1",
     "@types/topojson-client": "^3.0.0",
+    "classnames": "^2.2.6",
     "d3": "^5.6.0",
+    "d3-drag": "^1.2.3",
     "d3-geo": "^1.10.0",
     "lodash": "^4.17.10",
     "react": "^16.4.2",
@@ -17,9 +22,9 @@
     "react-simple-maps": "^0.12.1",
     "recompose": "latest",
     "styled-components": "latest",
-    "topojson": "^3.0.2",
     "topojson-client": "latest",
-    "vega": "^4.2.0"
+    "mobx": "latest",
+    "mobx-react": "latest"
   },
   "scripts": {
     "start": "react-scripts-ts start",

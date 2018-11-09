@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Map from './components/map/Map';
+import Dashboard from './containers/Dashboard'
 
 class App extends React.Component {
   public render() {
@@ -13,7 +13,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <div style={wrapperStyles}>
-          <Map />
+          <Dashboard />
         </div>
       </div>
     );

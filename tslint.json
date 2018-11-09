@@ -1,11 +1,17 @@
 {
   "extends": [],
   "defaultSeverity": "none",
+  "globals": {
+    "d3": true
+  },
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"
     ]
+  },
+  "rules": {
+    "no-unused-variable": false
   }
 }
