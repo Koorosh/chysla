@@ -21,3 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea
+
+/src/geo-data/*.json
+/ukr.json
+/ukr_0.1.json

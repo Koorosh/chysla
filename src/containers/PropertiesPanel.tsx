@@ -1,20 +1,12 @@
-import * as React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import LayersIcon from "@material-ui/icons/Layers";
-import TextField from "@material-ui/core/TextField";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import { withStyles } from "@material-ui/core/styles";
+import * as React from 'react'
+import ListItem from '@material-ui/core/ListItem'
+import ListSubheader from '@material-ui/core/ListSubheader'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
 import {observer} from 'mobx-react'
 
 import propertiesContext from '../contexts/properties-context'
-import mapContext, {ItemType} from '../contexts/map-context'
+import {ZoomLevel} from '../contexts/map-context'
 
 export const TextProperty: React.SFC<any> = (props) => {
   const onChange = (e) => {
@@ -79,16 +71,29 @@ export class PropertiesPanel extends React.Component<any, any> {
     super(props);
 
     this.onChange = this.onChange.bind(this)
+    this.handleShowStatesClick = this.handleShowStatesClick.bind(this)
+    this.handleShowRegionsClick = this.handleShowRegionsClick.bind(this)
   }
 
   onChange(data: any) {
     propertiesContext.onChange(data)
   }
 
+  handleShowStatesClick() {
+    propertiesContext.applyZoomFilter(ZoomLevel.STATE)
+  }
+
+  handleShowRegionsClick() {
+    propertiesContext.applyZoomFilter(ZoomLevel.REGION)
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <div>
+        <button onClick={this.handleShowStatesClick}>Show states</button>
+        <button onClick={this.handleShowRegionsClick}>Show regions</button>
+
         <ListSubheader inset>Properties</ListSubheader>
         {
           propertiesContext.propertiesTemplate && propertiesContext.propertiesTemplate.properties

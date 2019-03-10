@@ -1,6 +1,6 @@
 import {computed} from 'mobx'
 import {keys, get, extend, set} from 'lodash'
-import MapContext, {ItemType} from './map-context'
+import MapContext, {ItemType, ZoomLevel} from './map-context'
 import UserContext from './user-context'
 
 export interface Styled {
@@ -98,6 +98,10 @@ class PropertiesContext {
     const map = UserContext.map
     this.properties[path] = extend({}, this.properties[path], {[styleName]: styleVal})
     set(map, path, this.properties[path])
+  }
+
+  applyZoomFilter(zoomLevel: ZoomLevel) {
+    MapContext.zoomFilter = zoomLevel
   }
 }
 

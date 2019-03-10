@@ -18,9 +18,8 @@ import {observer} from "mobx-react"
 
 import DataTable from "./../components/DataTable";
 import DatasourcePanel from "./DatasourcePanel";
-import {SimpleMap} from './../components/map/SimpleMap'
 
-import mapContext from '../contexts/map-context'
+import MapContext from '../contexts/map-context'
 import PropertiesPanel from './PropertiesPanel'
 
 const drawerWidth = 240;
@@ -120,7 +119,8 @@ class Dashboard extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    new SimpleMap().render(this.mapRef)
+    MapContext.root = this.mapRef
+    MapContext.render
   }
 
   render() {
@@ -147,7 +147,7 @@ class Dashboard extends React.Component<any, any> {
                 noWrap
                 className={classes.title}
               >
-                { mapContext.name }
+                { MapContext.name }
               </Typography>
               <IconButton
                 color="inherit"

@@ -1,50 +1,5 @@
 svg {
-    background-color: rgb(191, 216, 242);
-}
-
-.country {
-    fill: #eee;
-}
-
-.country.UKR {
-    fill: #fff;
-}
-
-.country-boundary {
-    fill: none;
-    stroke: #aaa;
-}
-
-.region {
-    fill: transparent;
-}
-
-.region-boundary {
-    fill: none;
-    stroke: #777;
-    stroke-dasharray: 2,2;
-    stroke-linejoin: round;
-}
-
-.region-label {
-    fill: #888;
-    fill-opacity: .8;
-    font-size: 15px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    text-anchor: middle;
-}
-
-.coastline, .river, .lake {
-    stroke: rgb(83, 168, 231);
-}
-
-.coastline, .river {
-    fill: none;
-}
-
-.lake {
-    fill: rgb(191, 216, 242);
+    background-color: transparent;
 }
 
 .draggable {
